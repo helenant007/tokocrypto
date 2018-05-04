@@ -25,11 +25,31 @@ const ItemRow = props => {
           {props.data.name}
         </a>
       </td>
-      <td>{props.data.quotes.IDR.market_cap}</td>
-      <td>{props.data.quotes.IDR.price}</td>
-      <td>{props.data.quotes.IDR.volume_24h}</td>
       <td>
-        {props.data.circulating_supply} {props.data.symbol}{' '}
+        {props.data.quotes.IDR.market_cap.toLocaleString('id-ID', {
+          style: 'currency',
+          currency: 'IDR'
+        })}
+      </td>
+      <td>
+        {props.data.quotes.IDR.price.toLocaleString('id-ID', {
+          style: 'currency',
+          currency: 'IDR',
+          maximumFractionDigits: 2
+        })}
+      </td>
+      <td>
+        {props.data.quotes.IDR.volume_24h.toLocaleString('id-ID', {
+          style: 'currency',
+          currency: 'IDR',
+          maximumFractionDigits: 2
+        })}
+      </td>
+      <td>
+        {props.data.circulating_supply.toLocaleString('id-ID', {
+          maximumFractionDigits: 2
+        })}{' '}
+        {props.data.symbol}
       </td>
       <td>{props.data.quotes.IDR.percent_change_24h} %</td>
     </tr>
