@@ -86,7 +86,7 @@ class Home extends React.Component {
 
   fetchTickerData = () => {
     getTicker()
-      // .then(res => res.json())
+      .then(res => res.json())
       .then(res => Object.keys(res.data).map(o => res.data[o]))
       .then(res => {
         this.setState({
@@ -139,6 +139,7 @@ class Home extends React.Component {
           ticker={this.state.selectedTicker}
           toggle={this.toggleModal}
           currentBalance={this.props.currentBalance}
+          doTransaction={this.props.doTransaction}
         />
         <Container>
           <Row>

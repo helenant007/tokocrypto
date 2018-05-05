@@ -13,6 +13,8 @@ import {
   DropdownItem
 } from 'reactstrap';
 
+import { Link } from 'react-router-dom';
+
 class DefaultNavbar extends React.Component {
   constructor(props) {
     super(props);
@@ -39,7 +41,11 @@ class DefaultNavbar extends React.Component {
   render() {
     return (
       <Navbar color="dark" dark expand="md" style={{ marginBottom: '50px' }}>
-        <NavbarBrand href="#">
+        <Link
+          className="navbar-brand"
+          to="/"
+          style={{ textDecoration: 'none', color: 'white' }}
+        >
           <img
             src={process.env.PUBLIC_URL + '/logo-tokopedia.png'}
             alt="Toped"
@@ -47,7 +53,7 @@ class DefaultNavbar extends React.Component {
           />
           {'  '}
           TokoCrypto
-        </NavbarBrand>
+        </Link>
         <NavbarToggler onClick={this.toggle} />
         <Collapse isOpen={this.state.isOpen} navbar>
           <Nav className="ml-auto" navbar>
@@ -71,7 +77,14 @@ class DefaultNavbar extends React.Component {
                 />
               </DropdownToggle>
               <DropdownMenu right>
-                <DropdownItem>Histori Transaksi</DropdownItem>
+                <DropdownItem>
+                  <Link
+                    to="/history"
+                    style={{ textDecoration: 'none', color: '#16181b' }}
+                  >
+                    Histori Transaksi
+                  </Link>
+                </DropdownItem>
                 <DropdownItem divider />
                 <DropdownItem href="https://tokopedia.com">
                   Kembali ke halaman utama Tokopedia

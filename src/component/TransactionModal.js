@@ -11,7 +11,7 @@ import {
 } from 'reactstrap';
 
 function ShowAmount({ amount, price }) {
-  if (!amount || amount == 0) {
+  if (!amount || amount === 0) {
     return null;
   }
   return (
@@ -43,6 +43,16 @@ class TransactionModal extends React.Component {
     this.setState({
       amount: e.target.value
     });
+  };
+
+  transaction = action => {
+    this.props.doTransaction(
+      action,
+      this.props.ticker.symbol,
+      parseFloat(this.state.amount),
+      this.props.ticker.quotes.IDR.price
+    );
+    this.props.toggle();
   };
 
   render() {
@@ -94,10 +104,10 @@ class TransactionModal extends React.Component {
           />
         </ModalBody>
         <ModalFooter>
-          <Button color="success" onClick={this.props.toggle}>
+          <Button color="success" onClick={this.transaction.bind(this, 'buy')}>
             Buy
           </Button>
-          <Button color="danger" onClick={this.props.toggle}>
+          <Button color="danger" onClick={this.transaction.bind(this, 'sell')}>
             Sell
           </Button>
           <Button color="secondary" onClick={this.props.toggle}>
