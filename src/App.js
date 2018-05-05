@@ -36,9 +36,6 @@ class App extends Component {
 
     let currentBalance = parseFloat(this.state.currentBalance) + total;
 
-    debugger;
-    console.log(this);
-
     this.setState(
       {
         currentBalance,

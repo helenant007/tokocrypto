@@ -32,16 +32,30 @@ class TransactionModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      amount: 0
+      amount: '0',
+      correctInput: true
     };
   }
 
   handleChange = e => {
+    this.setState({
+      correctInput: false
+    });
+    if (e.target.value == '') {
+      this.setState({ amount: '' });
+      return;
+    }
+
+    let number = parseFloat(e.target.value);
+    if (isNaN(number)) {
+      return;
+    }
     if (e.target.value < 0) {
       return;
     }
     this.setState({
-      amount: e.target.value
+      amount: number.toString(),
+      correctInput: true
     });
   };
 
@@ -104,10 +118,18 @@ class TransactionModal extends React.Component {
           />
         </ModalBody>
         <ModalFooter>
-          <Button color="success" onClick={this.transaction.bind(this, 'buy')}>
+          <Button
+            color="success"
+            onClick={this.transaction.bind(this, 'buy')}
+            disabled={!this.state.correctInput}
+          >
             Buy
           </Button>
-          <Button color="danger" onClick={this.transaction.bind(this, 'sell')}>
+          <Button
+            color="danger"
+            onClick={this.transaction.bind(this, 'sell')}
+            disabled={!this.state.correctInput}
+          >
             Sell
           </Button>
           <Button color="secondary" onClick={this.props.toggle}>
