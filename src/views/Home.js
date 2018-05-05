@@ -9,18 +9,15 @@ class Home extends React.Component {
     this.state = {
       tickers: [],
       sort: {
-        column: null,
-        direction: null
+        column: 'rank',
+        direction: 'asc'
       }
     };
   }
 
-  sortTickerBy = col => {
-    let direction = 'asc';
-    if (col === this.state.sort.column) {
-      if (this.state.sort.direction === 'desc') direction = 'asc';
-      else direction = 'desc';
-    }
+  getSortedTicker = () => {
+    let col = this.state.sort.column;
+    let direction = this.state.sort.direction;
 
     const sortedTickers = this.state.tickers.sort((a, b) => {
       if (col === 'rank' || col === 'circulating_supply') {
@@ -60,8 +57,17 @@ class Home extends React.Component {
       sortedTickers.reverse();
     }
 
+    return sortedTickers;
+  };
+
+  sortTickerBy = col => {
+    let direction = 'asc';
+    if (col === this.state.sort.column) {
+      if (this.state.sort.direction === 'desc') direction = 'asc';
+      else direction = 'desc';
+    }
+
     this.setState({
-      tickers: sortedTickers,
       sort: {
         column: col,
         direction
@@ -73,20 +79,23 @@ class Home extends React.Component {
     this.sortTickerBy(e.target.id);
   };
 
-  componentDidMount() {
+  fetchTickerData = () => {
     getTicker()
       // .then(res => res.json())
       .then(res => Object.keys(res.data).map(o => res.data[o]))
       .then(res => {
-        this.setState(
-          {
-            tickers: res
-          },
-          () => {
-            this.sortTickerBy('rank');
-          }
-        );
+        this.setState({
+          tickers: res
+        });
       });
+
+    setTimeout(() => {
+      this.fetchTickerData();
+    }, 60000 * 5);
+  };
+
+  componentDidMount() {
+    this.fetchTickerData();
   }
 
   getArrow = col => {
@@ -134,8 +143,8 @@ class Home extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {Object.keys(this.state.tickers).map(itemID => (
-                  <ItemRow key={itemID} data={this.state.tickers[itemID]} />
+                {this.getSortedTicker().map(item => (
+                  <ItemRow key={item.id} data={item} />
                 ))}
               </tbody>
             </Table>
