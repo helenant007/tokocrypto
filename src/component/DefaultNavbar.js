@@ -19,8 +19,7 @@ class DefaultNavbar extends React.Component {
 
     this.toggle = this.toggle.bind(this);
     this.state = {
-      isOpen: false,
-      currentBalance: props.currentBalance
+      isOpen: false
     };
   }
 
@@ -33,11 +32,7 @@ class DefaultNavbar extends React.Component {
   componentDidMount() {
     let currentBalance = localStorage.getItem('currentBalance');
     if (!currentBalance) {
-      localStorage.setItem('currentBalance', this.state.currentBalance);
-    } else {
-      this.setState({
-        currentBalance: currentBalance
-      });
+      localStorage.setItem('currentBalance', this.props.currentBalance);
     }
   }
 
@@ -57,12 +52,9 @@ class DefaultNavbar extends React.Component {
         <Collapse isOpen={this.state.isOpen} navbar>
           <Nav className="ml-auto" navbar>
             <NavItem>
-              <NavLink href="/components/">Components</NavLink>
-            </NavItem>
-            <NavItem>
               <NavLink>
                 Saldo:{' '}
-                {parseInt(this.state.currentBalance).toLocaleString('id-ID', {
+                {parseInt(this.props.currentBalance).toLocaleString('id-ID', {
                   style: 'currency',
                   currency: 'IDR',
                   maximumFractionDigits: 2

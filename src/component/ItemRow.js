@@ -2,7 +2,7 @@ import React from 'react';
 
 const ItemRow = props => {
   return (
-    <tr>
+    <tr onClick={props.onClick}>
       <th scope="row">{props.data.rank}</th>
       <td>
         <img

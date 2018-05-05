@@ -27,8 +27,8 @@ class App extends Component {
   render() {
     return (
       <div>
-        <DefaultNavbar />
-        <Home />
+        <DefaultNavbar currentBalance={this.state.currentBalance} />
+        <Home currentBalance={this.state.currentBalance} />
         <DefaultFooter />
       </div>
     );

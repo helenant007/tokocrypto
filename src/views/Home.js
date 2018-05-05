@@ -2,6 +2,7 @@ import React from 'react';
 import { Container, Row, Col, Table } from 'reactstrap';
 import { getTicker } from '../services/coinmarketcap';
 import ItemRow from '../component/ItemRow';
+import TransactionModal from '../component/TransactionModal';
 
 class Home extends React.Component {
   constructor(props) {
@@ -11,6 +12,10 @@ class Home extends React.Component {
       sort: {
         column: 'rank',
         direction: 'asc'
+      },
+      selectedTicker: null,
+      modal: {
+        isOpen: false
       }
     };
   }
@@ -108,49 +113,76 @@ class Home extends React.Component {
     }
   };
 
+  toggleModal = () => {
+    this.setState({
+      modal: {
+        isOpen: !this.state.modal.isOpen
+      }
+    });
+  };
+
+  handleItemRow = selectedTicker => {
+    this.setState({
+      selectedTicker
+    });
+    this.toggleModal();
+  };
+
   render() {
     if (!this.state.tickers) {
       return 'Loading..';
     }
     return (
-      <Container>
-        <Row>
-          <Col>
-            <Table>
-              <thead>
-                <tr>
-                  <th id="rank" onClick={this.sortHandler}>
-                    Rank {this.getArrow('rank')}
-                  </th>
-                  <th id="name" onClick={this.sortHandler}>
-                    Name {this.getArrow('name')}
-                  </th>
-                  <th id="market_cap" onClick={this.sortHandler}>
-                    Market Cap {this.getArrow('market_cap')}
-                  </th>
-                  <th id="price" onClick={this.sortHandler}>
-                    Price (IDR) {this.getArrow('price')}
-                  </th>
-                  <th id="volume_24h" onClick={this.sortHandler}>
-                    Volume (24h) {this.getArrow('volume_24h')}
-                  </th>
-                  <th id="circulating_supply" onClick={this.sortHandler}>
-                    Circulating Supply {this.getArrow('circulating_supply')}
-                  </th>
-                  <th id="percent_change_24h" onClick={this.sortHandler}>
-                    Change (24h) {this.getArrow('percent_change_24h')}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {this.getSortedTicker().map(item => (
-                  <ItemRow key={item.id} data={item} />
-                ))}
-              </tbody>
-            </Table>
-          </Col>
-        </Row>
-      </Container>
+      <div>
+        <TransactionModal
+          isOpen={this.state.modal.isOpen}
+          ticker={this.state.selectedTicker}
+          toggle={this.toggleModal}
+          currentBalance={this.props.currentBalance}
+        />
+        <Container>
+          <Row>
+            <Col>
+              <Table>
+                <thead>
+                  <tr>
+                    <th id="rank" onClick={this.sortHandler}>
+                      Rank {this.getArrow('rank')}
+                    </th>
+                    <th id="name" onClick={this.sortHandler}>
+                      Name {this.getArrow('name')}
+                    </th>
+                    <th id="market_cap" onClick={this.sortHandler}>
+                      Market Cap {this.getArrow('market_cap')}
+                    </th>
+                    <th id="price" onClick={this.sortHandler}>
+                      Price (IDR) {this.getArrow('price')}
+                    </th>
+                    <th id="volume_24h" onClick={this.sortHandler}>
+                      Volume (24h) {this.getArrow('volume_24h')}
+                    </th>
+                    <th id="circulating_supply" onClick={this.sortHandler}>
+                      Circulating Supply {this.getArrow('circulating_supply')}
+                    </th>
+                    <th id="percent_change_24h" onClick={this.sortHandler}>
+                      Change (24h) {this.getArrow('percent_change_24h')}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {this.getSortedTicker().map(item => (
+                    <ItemRow
+                      onClick={this.handleItemRow.bind(this, item)}
+                      key={item.id}
+                      data={item}
+                    />
+                  ))}
+                </tbody>
+              </Table>
+            </Col>
+          </Row>
+        </Container>
+      </div>
     );
   }
 }
