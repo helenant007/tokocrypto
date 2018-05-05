@@ -41,7 +41,7 @@ class TransactionModal extends React.Component {
     this.setState({
       correctInput: false
     });
-    if (e.target.value == '') {
+    if (e.target.value === '') {
       this.setState({ amount: '' });
       return;
     }
@@ -93,7 +93,7 @@ class TransactionModal extends React.Component {
           <InputGroup>
             <p>
               Saldo anda saat ini:{' '}
-              {parseInt(this.props.currentBalance).toLocaleString('id-ID', {
+              {parseFloat(this.props.currentBalance).toLocaleString('id-ID', {
                 style: 'currency',
                 currency: 'IDR',
                 maximumFractionDigits: 2

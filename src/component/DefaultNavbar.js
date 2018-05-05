@@ -3,7 +3,6 @@ import {
   Collapse,
   Navbar,
   NavbarToggler,
-  NavbarBrand,
   Nav,
   NavItem,
   NavLink,
@@ -60,7 +59,7 @@ class DefaultNavbar extends React.Component {
             <NavItem>
               <NavLink>
                 Saldo:{' '}
-                {parseInt(this.props.currentBalance).toLocaleString('id-ID', {
+                {parseFloat(this.props.currentBalance).toLocaleString('id-ID', {
                   style: 'currency',
                   currency: 'IDR',
                   maximumFractionDigits: 2

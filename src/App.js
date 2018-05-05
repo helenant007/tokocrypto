@@ -18,7 +18,7 @@ class App extends Component {
   }
 
   doTransaction = (action, symbol, amount, price) => {
-    if (action == 'buy') {
+    if (action === 'buy') {
       price *= -1;
     }
     let total = amount * price;
@@ -35,7 +35,6 @@ class App extends Component {
     ];
 
     let currentBalance = parseFloat(this.state.currentBalance) + total;
-
     this.setState(
       {
         currentBalance,
