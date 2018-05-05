@@ -77,14 +77,12 @@ class DefaultNavbar extends React.Component {
                 />
               </DropdownToggle>
               <DropdownMenu right>
-                <DropdownItem>
-                  <Link
-                    to="/history"
-                    style={{ textDecoration: 'none', color: '#16181b' }}
-                  >
-                    Histori Transaksi
-                  </Link>
-                </DropdownItem>
+                <Link
+                  to="/history"
+                  style={{ textDecoration: 'none', color: '#16181b' }}
+                >
+                  <DropdownItem>Histori Transaksi</DropdownItem>
+                </Link>
                 <DropdownItem divider />
                 <DropdownItem href="https://tokopedia.com">
                   Kembali ke halaman utama Tokopedia
