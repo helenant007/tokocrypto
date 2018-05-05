@@ -19,14 +19,28 @@ class DefaultNavbar extends React.Component {
 
     this.toggle = this.toggle.bind(this);
     this.state = {
-      isOpen: false
+      isOpen: false,
+      currentBalance: props.currentBalance
     };
   }
+
   toggle() {
     this.setState({
       isOpen: !this.state.isOpen
     });
   }
+
+  componentDidMount() {
+    let currentBalance = localStorage.getItem('currentBalance');
+    if (!currentBalance) {
+      localStorage.setItem('currentBalance', this.state.currentBalance);
+    } else {
+      this.setState({
+        currentBalance: currentBalance
+      });
+    }
+  }
+
   render() {
     return (
       <Navbar color="dark" dark expand="md" style={{ marginBottom: '50px' }}>
@@ -46,13 +60,20 @@ class DefaultNavbar extends React.Component {
               <NavLink href="/components/">Components</NavLink>
             </NavItem>
             <NavItem>
-              <NavLink>Sisa Duit anda: xxxx</NavLink>
+              <NavLink>
+                Saldo:{' '}
+                {parseInt(this.state.currentBalance).toLocaleString('id-ID', {
+                  style: 'currency',
+                  currency: 'IDR',
+                  maximumFractionDigits: 2
+                })}
+              </NavLink>
             </NavItem>
             <UncontrolledDropdown nav inNavbar>
               <DropdownToggle nav caret>
                 <img
                   src={process.env.PUBLIC_URL + '/toped.png'}
-                  alt="Toppers"
+                  alt="Toped"
                   width="35px"
                   className="rounded-circle border border-success"
                 />

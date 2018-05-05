@@ -14,8 +14,7 @@ const ItemRow = props => {
           alt={props.data.name}
           height="16"
           width="16"
-        />
-        &nbsp;
+        />{' '}
         <a
           href={
             'https://coinmarketcap.com/currencies/' + props.data.website_slug
