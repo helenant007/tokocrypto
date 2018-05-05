@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Container,
   Collapse,
   Navbar,
   NavbarToggler,
@@ -31,11 +30,14 @@ class DefaultNavbar extends React.Component {
   render() {
     return (
       <Navbar color="dark" dark expand="md" style={{ marginBottom: '50px' }}>
-        <NavbarBrand href="https://tokopedia.com">
+        <NavbarBrand href="#">
           <img
             src={process.env.PUBLIC_URL + '/logo-tokopedia.png'}
+            alt="Toped"
             width="145px"
           />
+          {'  '}
+          TokoCrypto
         </NavbarBrand>
         <NavbarToggler onClick={this.toggle} />
         <Collapse isOpen={this.state.isOpen} navbar>
@@ -44,19 +46,23 @@ class DefaultNavbar extends React.Component {
               <NavLink href="/components/">Components</NavLink>
             </NavItem>
             <NavItem>
-              <NavLink href="https://github.com/reactstrap/reactstrap">
-                GitHub
-              </NavLink>
+              <NavLink>Sisa Duit anda: xxxx</NavLink>
             </NavItem>
             <UncontrolledDropdown nav inNavbar>
               <DropdownToggle nav caret>
-                Options
+                <img
+                  src={process.env.PUBLIC_URL + '/toped.png'}
+                  alt="Toppers"
+                  width="35px"
+                  className="rounded-circle border border-success"
+                />
               </DropdownToggle>
               <DropdownMenu right>
-                <DropdownItem>Option 1</DropdownItem>
-                <DropdownItem>Option 2</DropdownItem>
+                <DropdownItem>Histori Transaksi</DropdownItem>
                 <DropdownItem divider />
-                <DropdownItem>Reset</DropdownItem>
+                <DropdownItem href="https://tokopedia.com">
+                  Kembali ke halaman utama Tokopedia
+                </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
           </Nav>

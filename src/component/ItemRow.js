@@ -1,7 +1,6 @@
 import React from 'react';
 
 const ItemRow = props => {
-  console.log(props);
   return (
     <tr>
       <th scope="row">{props.data.rank}</th>
