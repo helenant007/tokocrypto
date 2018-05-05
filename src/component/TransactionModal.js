@@ -7,7 +7,8 @@ import {
   Input,
   Modal,
   ModalFooter,
-  Button
+  Button,
+  Alert
 } from 'reactstrap';
 
 function ShowAmount({ amount, price }) {
@@ -33,13 +34,15 @@ class TransactionModal extends React.Component {
     super(props);
     this.state = {
       amount: '0',
-      correctInput: true
+      correctInput: true,
+      isAmountValid: true
     };
   }
 
   handleChange = e => {
     this.setState({
-      correctInput: false
+      correctInput: false,
+      isAmountValid: true
     });
     if (e.target.value === '') {
       this.setState({ amount: '' });
@@ -60,6 +63,30 @@ class TransactionModal extends React.Component {
   };
 
   transaction = action => {
+    if (action === 'sell') {
+      let amtSymbol = this.props.transactionHistory
+        .filter(h => h.symbol === this.props.ticker.symbol)
+        .map(h => h.amount)
+        .reduce((sum, v) => sum + v);
+
+      if (this.state.amount < amtSymbol) {
+        this.setState({
+          isAmountValid: false
+        });
+        return;
+      }
+    } else {
+      if (
+        this.props.currentBalance <
+        this.state.amount * this.props.ticker.quotes.IDR.price
+      ) {
+        this.setState({
+          isAmountValid: false
+        });
+        return;
+      }
+    }
+
     this.props.doTransaction(
       action,
       this.props.ticker.symbol,
@@ -73,6 +100,12 @@ class TransactionModal extends React.Component {
     if (!this.props.ticker) {
       return null;
     }
+
+    let alert = this.state.isAmountValid ? (
+      ' '
+    ) : (
+      <Alert color="danger">Saldo anda tidak mencukupi transaksi ini</Alert>
+    );
 
     return (
       <Modal isOpen={this.props.isOpen} toggle={this.props.toggle}>
@@ -116,6 +149,7 @@ class TransactionModal extends React.Component {
             amount={this.state.amount}
             price={this.props.ticker.quotes.IDR.price}
           />
+          {alert}
         </ModalBody>
         <ModalFooter>
           <Button

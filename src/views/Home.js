@@ -139,6 +139,7 @@ class Home extends React.Component {
           ticker={this.state.selectedTicker}
           toggle={this.toggleModal}
           currentBalance={this.props.currentBalance}
+          transactionHistory={this.props.transactionHistory}
           doTransaction={this.props.doTransaction}
         />
         <Container>

@@ -84,6 +84,7 @@ class App extends Component {
               <Home
                 doTransaction={this.doTransaction}
                 currentBalance={this.state.currentBalance}
+                transactionHistory={this.state.transactionHistory}
               />
             )}
           />
