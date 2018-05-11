@@ -3,6 +3,7 @@ import { Container, Row, Col, Table } from 'reactstrap';
 import { getTicker } from '../services/coinmarketcap';
 import ItemRow from '../component/ItemRow';
 import TransactionModal from '../component/TransactionModal';
+import PropTypes from 'prop-types';
 
 class Home extends React.Component {
   constructor(props) {
@@ -86,7 +87,7 @@ class Home extends React.Component {
 
   fetchTickerData = () => {
     getTicker()
-      .then(res => res.json())
+      // .then(res => res.json())
       .then(res => Object.keys(res.data).map(o => res.data[o]))
       .then(res => {
         this.setState({
@@ -138,9 +139,6 @@ class Home extends React.Component {
           isOpen={this.state.modal.isOpen}
           ticker={this.state.selectedTicker}
           toggle={this.toggleModal}
-          currentBalance={this.props.currentBalance}
-          transactionHistory={this.props.transactionHistory}
-          doTransaction={this.props.doTransaction}
         />
         <Container>
           <Row>
@@ -187,6 +185,16 @@ class Home extends React.Component {
       </div>
     );
   }
+}
+Home.propTypes = {
+  transactionHistory: PropTypes.arrayOf(
+    PropTypes.shape({
+      symbol: PropTypes.string.isRequired,
+      amount: PropTypes.number.isRequired,
+      price: PropTypes.number.isRequired,
+      total: PropTypes.number.isRequired,
+    })
+  )
 }
 
 export default Home;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   ModalHeader,
   ModalBody,
@@ -9,7 +9,10 @@ import {
   ModalFooter,
   Button,
   Alert
-} from 'reactstrap';
+} from "reactstrap";
+
+import {connect} from 'react-redux'
+import { setHistory } from "../reducers/user";
 
 function ShowAmount({ amount, price }) {
   if (!amount || amount === 0) {
@@ -18,10 +21,10 @@ function ShowAmount({ amount, price }) {
   return (
     <InputGroup>
       <p>
-        Total Transaksi:{' '}
-        {(amount * price).toLocaleString('id-ID', {
-          style: 'currency',
-          currency: 'IDR',
+        Total Transaksi:{" "}
+        {(amount * price).toLocaleString("id-ID", {
+          style: "currency",
+          currency: "IDR",
           maximumFractionDigits: 2
         })}
       </p>
@@ -33,7 +36,7 @@ class TransactionModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      amount: '0',
+      amount: "0",
       correctInput: true,
       isAmountValid: true
     };
@@ -44,8 +47,8 @@ class TransactionModal extends React.Component {
       correctInput: false,
       isAmountValid: true
     });
-    if (e.target.value === '') {
-      this.setState({ amount: '' });
+    if (e.target.value === "") {
+      this.setState({ amount: "" });
       return;
     }
 
@@ -63,13 +66,23 @@ class TransactionModal extends React.Component {
   };
 
   transaction = action => {
-    if (action === 'sell') {
-      let amtSymbol = this.props.transactionHistory
-        .filter(h => h.symbol === this.props.ticker.symbol)
-        .map(h => h.amount)
-        .reduce((sum, v) => sum + v);
+    if (+this.state.amount === 0) {
+      this.setState({
+        isAmountValid: false
+      });
+      return;
+    }
+    
+    if (action === "sell") {
+      let amtSymbol = this.props.transactionHistory.filter(h => h.symbol === this.props.ticker.symbol);
 
-      if (this.state.amount < amtSymbol) {
+      if (amtSymbol.length > 0) {
+        amtSymbol = amtSymbol.map(h => h.action === 'buy' ? h.amount : -h.amount).reduce((sum, v) => sum + v);
+      } else {
+        amtSymbol = 0;
+      }
+
+      if (amtSymbol < this.state.amount) {
         this.setState({
           isAmountValid: false
         });
@@ -87,7 +100,7 @@ class TransactionModal extends React.Component {
       }
     }
 
-    this.props.doTransaction(
+    this.doTransaction(
       action,
       this.props.ticker.symbol,
       parseFloat(this.state.amount),
@@ -96,13 +109,35 @@ class TransactionModal extends React.Component {
     this.props.toggle();
   };
 
+    doTransaction = (action, symbol, amount, price) => {
+    if (action === 'buy') {
+      price *= -1;
+    }
+    let total = amount * price;
+
+    let transactionHistory = [
+      ...this.props.transactionHistory,
+      {
+        action,
+        symbol,
+        amount,
+        price,
+        total: amount * price
+      }
+    ];
+
+    let currentBalance = parseFloat(this.props.currentBalance) + total;
+    console.log(currentBalance, transactionHistory)
+    this.props.setHistory(currentBalance, transactionHistory)
+  };
+
   render() {
     if (!this.props.ticker) {
       return null;
     }
 
     let alert = this.state.isAmountValid ? (
-      ' '
+      " "
     ) : (
       <Alert color="danger">Saldo anda tidak mencukupi transaksi ini</Alert>
     );
@@ -115,20 +150,20 @@ class TransactionModal extends React.Component {
         <ModalBody>
           <InputGroup>
             <p>
-              Nilai tukar (IDR):{' '}
-              {this.props.ticker.quotes.IDR.price.toLocaleString('id-ID', {
-                style: 'currency',
-                currency: 'IDR',
+              Nilai tukar (IDR):{" "}
+              {this.props.ticker.quotes.IDR.price.toLocaleString("id-ID", {
+                style: "currency",
+                currency: "IDR",
                 maximumFractionDigits: 2
               })}
             </p>
           </InputGroup>
           <InputGroup>
             <p>
-              Saldo anda saat ini:{' '}
-              {parseFloat(this.props.currentBalance).toLocaleString('id-ID', {
-                style: 'currency',
-                currency: 'IDR',
+              Saldo anda saat ini:{" "}
+              {parseFloat(this.props.currentBalance).toLocaleString("id-ID", {
+                style: "currency",
+                currency: "IDR",
                 maximumFractionDigits: 2
               })}
             </p>
@@ -154,14 +189,14 @@ class TransactionModal extends React.Component {
         <ModalFooter>
           <Button
             color="success"
-            onClick={this.transaction.bind(this, 'buy')}
+            onClick={this.transaction.bind(this, "buy")}
             disabled={!this.state.correctInput}
           >
             Buy
           </Button>
           <Button
             color="danger"
-            onClick={this.transaction.bind(this, 'sell')}
+            onClick={this.transaction.bind(this, "sell")}
             disabled={!this.state.correctInput}
           >
             Sell
@@ -175,4 +210,14 @@ class TransactionModal extends React.Component {
   }
 }
 
-export default TransactionModal;
+const mapStateToProps = state => ({
+  currentBalance: state.user.currentBalance,
+  transactionHistory: state.user.transactionHistory
+});
+
+const mapDispatchToProps = dispatch => ({
+  setHistory: (currentBalance, transactionHistory) => dispatch(setHistory(currentBalance, transactionHistory) ),
+  // setCurrentBalance: (currentBalance) => dispatch(setCurrentBalance(currentBalance))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(TransactionModal);

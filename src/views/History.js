@@ -1,8 +1,10 @@
 import React from 'react';
 import { Container, Row, Col, Table } from 'reactstrap';
 import HistoryItemRow from '../component/HistoryItemRow';
+import { connect } from 'react-redux';
 
 const History = props => {
+  console.log('MY PROPS' , props);
   if (props.transactionHistory.length === 0) {
     return (
       <Container>
@@ -45,4 +47,8 @@ const History = props => {
   );
 };
 
-export default History;
+const mapStateToProps = state => ({
+  transactionHistory: state.user.transactionHistory
+})
+
+export default  connect(mapStateToProps)(History);
